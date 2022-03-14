@@ -347,10 +347,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _VideoStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../VideoStore */ "./src/js/VideoStore.js");
@@ -363,7 +363,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 
 
@@ -372,48 +372,67 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 var Search = /*#__PURE__*/function () {
   function Search() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__["default"])(this, Search);
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Search);
+
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "debounce", void 0);
 
     this.subscribeEvents();
     this.keyword = '';
     this.nextPageToken = '';
   }
 
-  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__["default"])(Search, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Search, [{
     key: "subscribeEvents",
     value: function subscribeEvents() {
       var _this = this;
 
       (0,_utils__WEBPACK_IMPORTED_MODULE_6__.on)('form', '@search', function (e) {
-        return _this.search('search', e.detail.keyword);
+        return _this.debounceSearch('search', e.detail.keyword);
       }, (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('search-form'));
       (0,_utils__WEBPACK_IMPORTED_MODULE_6__.on)('ul', '@scroll', function () {
-        return _this.search('scroll');
+        return _this.debounceSearch('scroll');
       }, (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('search-result'));
+    }
+  }, {
+    key: "loading",
+    value: function loading() {
+      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('ul', (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('search-result')).insertSkeleton();
+    }
+  }, {
+    key: "debounceSearch",
+    value: function debounceSearch(type) {
+      var _this2 = this;
+
+      var keyword = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.keyword;
+      this.loading();
+
+      if (this.debounce) {
+        clearTimeout(this.debounce);
+      }
+
+      this.debounce = setTimeout(function () {
+        _this2.search(type, keyword);
+      }, 500);
     }
   }, {
     key: "search",
     value: function () {
-      var _search = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().mark(function _callee(type) {
-        var keyword,
-            videos,
-            _args = arguments;
+      var _search = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().mark(function _callee(type, keyword) {
+        var videos;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                keyword = _args.length > 1 && _args[1] !== undefined ? _args[1] : this.keyword;
-                (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('ul', (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('search-result')).insertSkeleton();
-                _context.next = 4;
+                _context.next = 2;
                 return this.fetchVideo(keyword);
 
-              case 4:
+              case 2:
                 videos = _context.sent;
                 this.keyword = keyword;
                 this.nextPageToken = videos.nextPageToken ? videos.nextPageToken : '';
                 _VideoStore__WEBPACK_IMPORTED_MODULE_5__["default"].instance.dispatch(type, this.preprocessor(videos));
 
-              case 8:
+              case 6:
               case "end":
                 return _context.stop();
             }
@@ -421,7 +440,7 @@ var Search = /*#__PURE__*/function () {
         }, _callee, this);
       }));
 
-      function search(_x) {
+      function search(_x, _x2) {
         return _search.apply(this, arguments);
       }
 
@@ -430,7 +449,7 @@ var Search = /*#__PURE__*/function () {
   }, {
     key: "fetchVideo",
     value: function () {
-      var _fetchVideo = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().mark(function _callee2(keyword) {
+      var _fetchVideo = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().mark(function _callee2(keyword) {
         var response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().wrap(function _callee2$(_context2) {
           while (1) {
@@ -468,7 +487,7 @@ var Search = /*#__PURE__*/function () {
         }, _callee2, this, [[0, 10]]);
       }));
 
-      function fetchVideo(_x2) {
+      function fetchVideo(_x3) {
         return _fetchVideo.apply(this, arguments);
       }
 
