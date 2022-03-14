@@ -310,7 +310,9 @@ var Save = /*#__PURE__*/function () {
   }, {
     key: "loadVideos",
     value: function loadVideos() {
-      return localStorage.getItem('videos') ? JSON.parse(localStorage.getItem('videos')) : [];
+      var _JSON$parse;
+
+      return (_JSON$parse = JSON.parse(localStorage.getItem('videos'))) !== null && _JSON$parse !== void 0 ? _JSON$parse : [];
     }
   }], [{
     key: "instance",
@@ -418,6 +420,8 @@ var Search = /*#__PURE__*/function () {
     key: "search",
     value: function () {
       var _search = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().mark(function _callee(type, keyword) {
+        var _videos$nextPageToken;
+
         var videos;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().wrap(function _callee$(_context) {
           while (1) {
@@ -429,7 +433,7 @@ var Search = /*#__PURE__*/function () {
               case 2:
                 videos = _context.sent;
                 this.keyword = keyword;
-                this.nextPageToken = videos.nextPageToken ? videos.nextPageToken : '';
+                this.nextPageToken = (_videos$nextPageToken = videos.nextPageToken) !== null && _videos$nextPageToken !== void 0 ? _videos$nextPageToken : '';
                 _VideoStore__WEBPACK_IMPORTED_MODULE_5__["default"].instance.dispatch(type, this.preprocessor(videos));
 
               case 6:
