@@ -397,8 +397,8 @@ var Search = /*#__PURE__*/function () {
     }
   }, {
     key: "loading",
-    value: function loading() {
-      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('ul', (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('search-result')).insertSkeleton();
+    value: function loading(type) {
+      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('ul', (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('search-result')).insertSkeleton(type);
     }
   }, {
     key: "debounceSearch",
@@ -406,7 +406,7 @@ var Search = /*#__PURE__*/function () {
       var _this2 = this;
 
       var keyword = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.keyword;
-      this.loading();
+      this.loading(type);
 
       if (this.debounce) {
         clearTimeout(this.debounce);
@@ -1024,11 +1024,6 @@ var VideoList = /*#__PURE__*/function (_HTMLUListElement) {
   }, {
     key: "notify",
     value: function notify(type, data) {
-      if (type === 'search') {
-        this.resetResult();
-        this.scrollTop = 0;
-      }
-
       this.removeSkeleton();
       this.insertVideoItems(data);
       this.hideStoredVideoSaveButton(data);
@@ -1037,10 +1032,15 @@ var VideoList = /*#__PURE__*/function (_HTMLUListElement) {
     key: "resetResult",
     value: function resetResult() {
       this.textContent = '';
+      this.scrollTop = 0;
     }
   }, {
     key: "insertSkeleton",
-    value: function insertSkeleton() {
+    value: function insertSkeleton(type) {
+      if (type === 'search') {
+        this.resetResult();
+      }
+
       this.insertAdjacentHTML('beforeend', _templates__WEBPACK_IMPORTED_MODULE_9__["default"].SKELETON.repeat(10));
     }
   }, {
