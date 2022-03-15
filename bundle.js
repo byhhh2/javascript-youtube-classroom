@@ -420,28 +420,36 @@ var Search = /*#__PURE__*/function () {
     key: "search",
     value: function () {
       var _search = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().mark(function _callee(type, keyword) {
-        var _videos$nextPageToken;
+        var _videos$nextPageToken, videos;
 
-        var videos;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return this.fetchVideo(keyword);
+                _context.prev = 0;
+                _constants__WEBPACK_IMPORTED_MODULE_7__.SEARCH_API.URL.search = this.generateSearchParams(keyword);
+                _context.next = 4;
+                return (0,_utils__WEBPACK_IMPORTED_MODULE_6__.fetchData)(_constants__WEBPACK_IMPORTED_MODULE_7__.SEARCH_API.URL);
 
-              case 2:
+              case 4:
                 videos = _context.sent;
                 this.keyword = keyword;
                 this.nextPageToken = (_videos$nextPageToken = videos.nextPageToken) !== null && _videos$nextPageToken !== void 0 ? _videos$nextPageToken : '';
                 _VideoStore__WEBPACK_IMPORTED_MODULE_5__["default"].instance.dispatch(type, this.preprocessor(videos));
+                _context.next = 13;
+                break;
 
-              case 6:
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](0);
+                alert(_constants__WEBPACK_IMPORTED_MODULE_7__.ERROR_MESSAGE.FAIL_TO_REQUEST_API);
+
+              case 13:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
+        }, _callee, this, [[0, 10]]);
       }));
 
       function search(_x, _x2) {
@@ -449,53 +457,6 @@ var Search = /*#__PURE__*/function () {
       }
 
       return search;
-    }()
-  }, {
-    key: "fetchVideo",
-    value: function () {
-      var _fetchVideo = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().mark(function _callee2(keyword) {
-        var response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.prev = 0;
-                _constants__WEBPACK_IMPORTED_MODULE_7__.SEARCH_API.URL.search = this.generateSearchParams(keyword);
-                _context2.next = 4;
-                return (0,_utils__WEBPACK_IMPORTED_MODULE_6__.fetchData)(_constants__WEBPACK_IMPORTED_MODULE_7__.SEARCH_API.URL);
-
-              case 4:
-                response = _context2.sent;
-
-                if (!(response instanceof Error)) {
-                  _context2.next = 7;
-                  break;
-                }
-
-                throw new Error(_constants__WEBPACK_IMPORTED_MODULE_7__.ERROR_MESSAGE.FAIL_TO_REQUEST_API);
-
-              case 7:
-                return _context2.abrupt("return", response);
-
-              case 10:
-                _context2.prev = 10;
-                _context2.t0 = _context2["catch"](0);
-                alert(_context2.t0.message);
-                return _context2.abrupt("return", _context2.t0);
-
-              case 14:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this, [[0, 10]]);
-      }));
-
-      function fetchVideo(_x3) {
-        return _fetchVideo.apply(this, arguments);
-      }
-
-      return fetchVideo;
     }()
   }, {
     key: "generateSearchParams",
