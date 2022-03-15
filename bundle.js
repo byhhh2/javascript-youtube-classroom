@@ -436,15 +436,16 @@ var Search = /*#__PURE__*/function () {
                 this.keyword = keyword;
                 this.nextPageToken = (_videos$nextPageToken = videos.nextPageToken) !== null && _videos$nextPageToken !== void 0 ? _videos$nextPageToken : '';
                 _VideoStore__WEBPACK_IMPORTED_MODULE_5__["default"].instance.dispatch(type, this.preprocessor(videos));
-                _context.next = 13;
+                _context.next = 14;
                 break;
 
               case 10:
                 _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 alert(_constants__WEBPACK_IMPORTED_MODULE_7__.ERROR_MESSAGE.FAIL_TO_REQUEST_API);
+                (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('ul', (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('search-result')).resetResult();
 
-              case 13:
+              case 14:
               case "end":
                 return _context.stop();
             }
