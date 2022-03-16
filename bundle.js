@@ -414,7 +414,7 @@ var Search = /*#__PURE__*/function () {
 
       this.debounce = setTimeout(function () {
         _this2.search(type, keyword);
-      }, 500);
+      }, 1000);
     }
   }, {
     key: "search",
