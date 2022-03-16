@@ -883,7 +883,6 @@ var VideoItem = /*#__PURE__*/function (_CustomElement) {
   }, {
     key: "emitEvent",
     value: function emitEvent(e) {
-      e.preventDefault();
       this.hideSaveButton(e);
       var videoId = this.dataset.id;
       (0,_utils__WEBPACK_IMPORTED_MODULE_8__.emit)('.video-item__save-button', '@save', {
