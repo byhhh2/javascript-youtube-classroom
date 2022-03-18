@@ -494,9 +494,11 @@ var MyClassroom = /*#__PURE__*/function (_CustomElement) {
   }, {
     key: "setEvent",
     value: function setEvent() {
+      var _this = this;
+
       (0,_utils__WEBPACK_IMPORTED_MODULE_6__.addEvent)(this, 'click', '#search-modal-button', this.showSearchModal);
       (0,_utils__WEBPACK_IMPORTED_MODULE_6__.addEvent)(this, 'click', '.menu', function (e) {
-        return (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('my-result').switchMenu(e);
+        return (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('my-result', _this).switchMenu(e);
       });
     }
   }, {
@@ -574,14 +576,14 @@ var MyResult = /*#__PURE__*/function (_CustomElement) {
   }, {
     key: "showWatchedVideoList",
     value: function showWatchedVideoList() {
-      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#unwatched-video-list').classList.add('hidden');
-      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#watched-video-list').classList.remove('hidden');
+      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#unwatched-video-list', this).classList.add('hidden');
+      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#watched-video-list', this).classList.remove('hidden');
     }
   }, {
     key: "showUnwatchedVideoList",
     value: function showUnwatchedVideoList() {
-      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#watched-video-list').classList.add('hidden');
-      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#unwatched-video-list').classList.remove('hidden');
+      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#watched-video-list', this).classList.add('hidden');
+      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#unwatched-video-list', this).classList.remove('hidden');
     }
   }]);
 
