@@ -777,7 +777,7 @@ var MyVideoList = /*#__PURE__*/function (_HTMLUListElement) {
   }, {
     key: "showNoVideo",
     value: function showNoVideo(isWatchedList) {
-      this.innerHTML = _templates__WEBPACK_IMPORTED_MODULE_6__["default"].generateNoVideo(isWatchedList ? _constants__WEBPACK_IMPORTED_MODULE_8__.INFO_MESSAGE.NO_WATCHED_VIDEO : _constants__WEBPACK_IMPORTED_MODULE_8__.INFO_MESSAGE.NO_WATCHED_VIDEO);
+      this.innerHTML = _templates__WEBPACK_IMPORTED_MODULE_6__["default"].generateNoVideo(isWatchedList ? _constants__WEBPACK_IMPORTED_MODULE_8__.INFO_MESSAGE.NO_WATCHED_VIDEO : _constants__WEBPACK_IMPORTED_MODULE_8__.INFO_MESSAGE.NO_UNWATCHED_VIDEO);
     }
   }]);
 
