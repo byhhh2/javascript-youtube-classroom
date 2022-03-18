@@ -741,17 +741,17 @@ var MyVideoList = /*#__PURE__*/function (_HTMLUListElement) {
     value: function connectedCallback() {
       this.render();
       _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_7__["default"].instance.subscribe(this);
-    } // eslint-disable-next-line max-lines-per-function
-
+    }
   }, {
     key: "render",
     value: function render() {
       var _this = this;
 
-      var videos = _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_7__["default"].instance.filterVideos(!this.id.includes('unwatched'));
+      var isWatchedList = !this.id.includes('unwatched');
+      var videos = _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_7__["default"].instance.filterVideos(isWatchedList);
 
       if (!videos.length) {
-        this.innerHTML = _templates__WEBPACK_IMPORTED_MODULE_6__["default"].generateNoVideo(!this.id.includes('unwatched') ? '아직 시청한 영상이 없습니다.' : '아직 저장된 영상이 없습니다.');
+        this.showNoVideo(isWatchedList);
       }
 
       videos.forEach(function (video) {
@@ -763,6 +763,11 @@ var MyVideoList = /*#__PURE__*/function (_HTMLUListElement) {
     value: function notify() {
       this.textContent = '';
       this.render();
+    }
+  }, {
+    key: "showNoVideo",
+    value: function showNoVideo(isWatchedList) {
+      this.innerHTML = _templates__WEBPACK_IMPORTED_MODULE_6__["default"].generateNoVideo(isWatchedList ? '아직 시청한 영상이 없습니다.' : '아직 저장된 영상이 없습니다.');
     }
   }]);
 
