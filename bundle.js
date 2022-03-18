@@ -1051,9 +1051,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _abstract_CustomElement__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../abstract/CustomElement */ "./src/js/abstract/CustomElement.js");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils */ "./src/js/utils.js");
 /* harmony import */ var _templates__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../templates */ "./src/js/templates.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../constants */ "./src/js/constants.js");
-/* harmony import */ var _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../stores/SavedVideo */ "./src/js/stores/SavedVideo.js");
-/* harmony import */ var _domains_Save__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../domains/Save */ "./src/js/domains/Save.js");
+/* harmony import */ var _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../stores/SavedVideo */ "./src/js/stores/SavedVideo.js");
+/* harmony import */ var _domains_Save__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../domains/Save */ "./src/js/domains/Save.js");
 
 
 
@@ -1063,7 +1062,6 @@ __webpack_require__.r(__webpack_exports__);
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
 
 
 
@@ -1087,7 +1085,7 @@ var VideoItem = /*#__PURE__*/function (_CustomElement) {
     key: "render",
     value: function render() {
       this.innerHTML = this.template(_stores_SearchedVideo__WEBPACK_IMPORTED_MODULE_5__["default"].instance.findVideo(this.dataset.id));
-      _domains_Save__WEBPACK_IMPORTED_MODULE_11__["default"].instance.subscribe(this);
+      _domains_Save__WEBPACK_IMPORTED_MODULE_10__["default"].instance.subscribe(this);
     }
   }, {
     key: "template",
@@ -1115,8 +1113,7 @@ var VideoItem = /*#__PURE__*/function (_CustomElement) {
   }, {
     key: "hideSaveButton",
     value: function hideSaveButton(e) {
-      var videos = _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_10__["default"].instance.getVideos();
-      if (videos.length >= _constants__WEBPACK_IMPORTED_MODULE_9__.VIDEO.MAX_SAVABLE_COUNT) return;
+      if (!_stores_SavedVideo__WEBPACK_IMPORTED_MODULE_9__["default"].instance.isStorable()) return;
       e.target.hidden = true;
     }
   }]);
@@ -1287,6 +1284,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/classPrivateFieldGet */ "./node_modules/@babel/runtime/helpers/esm/classPrivateFieldGet.js");
 /* harmony import */ var _babel_runtime_helpers_classPrivateFieldSet__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/classPrivateFieldSet */ "./node_modules/@babel/runtime/helpers/esm/classPrivateFieldSet.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../constants */ "./src/js/constants.js");
 
 
 
@@ -1296,6 +1294,8 @@ __webpack_require__.r(__webpack_exports__);
 function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
 
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+
+
 
 var _videos = /*#__PURE__*/new WeakMap();
 
@@ -1359,6 +1359,11 @@ var SavedVideo = /*#__PURE__*/function () {
       return (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_3__["default"])(this, _videos).find(function (video) {
         return video.id === videoId;
       });
+    }
+  }, {
+    key: "isStorable",
+    value: function isStorable() {
+      return (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_3__["default"])(this, _videos).length < _constants__WEBPACK_IMPORTED_MODULE_5__.VIDEO.MAX_SAVABLE_COUNT;
     }
   }], [{
     key: "instance",
