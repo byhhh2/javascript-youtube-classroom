@@ -1454,6 +1454,11 @@ var SearchedVideo = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "getVideos",
+    value: function getVideos() {
+      return (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_5__["default"])(this, _videos);
+    }
+  }, {
     key: "findVideo",
     value: function findVideo(videoId) {
       return (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_5__["default"])(this, _videos).find(function (video) {
