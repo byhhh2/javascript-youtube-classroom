@@ -3921,21 +3921,18 @@ var __webpack_exports__ = {};
   \*************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "save": () => (/* binding */ save),
-/* harmony export */   "search": () => (/* binding */ search)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _elements_MyClassroom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./elements/MyClassroom */ "./src/js/elements/MyClassroom.js");
 /* harmony import */ var _elements_SearchModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./elements/SearchModal */ "./src/js/elements/SearchModal.js");
 /* harmony import */ var _css_index_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../css/index.css */ "./src/css/index.css");
 /* harmony import */ var _domains_Search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./domains/Search */ "./src/js/domains/Search.js");
-/* harmony import */ var _domains_Save__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./domains/Save */ "./src/js/domains/Save.js");
-
 
 
 
 
 var search = new _domains_Search__WEBPACK_IMPORTED_MODULE_3__["default"]();
-var save = new _domains_Save__WEBPACK_IMPORTED_MODULE_4__["default"]();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (search);
 })();
 
 /******/ })()
