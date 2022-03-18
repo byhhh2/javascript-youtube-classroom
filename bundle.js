@@ -914,12 +914,16 @@ var SearchModal = /*#__PURE__*/function (_CustomElement) {
   }, {
     key: "setEvent",
     value: function setEvent() {
-      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.addEvent)(this, 'click', '.dimmer', this.hideSearchModal);
+      var _this = this;
+
+      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.addEvent)(this, 'click', '.dimmer', function () {
+        return _this.hideSearchModal();
+      });
     }
   }, {
     key: "hideSearchModal",
     value: function hideSearchModal() {
-      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('.modal-container').classList.add('hide');
+      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('.modal-container', this).classList.add('hide');
     }
   }]);
 
