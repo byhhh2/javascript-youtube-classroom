@@ -1135,7 +1135,7 @@ var TEMPLATE = {
     return "\n      <li class=\"video-item\" data-video-id=\"".concat(video.id, "\">\n        <img\n          src=\"").concat(decodeURI(video.thumbnail), "\"\n          alt=\"video-item-thumbnail\" class=\"video-item__thumbnail\">\n        <h4 class=\"video-item__title\">").concat(decodeURI(video.title), "</h4>\n        <p class=\"video-item__channel-name\">").concat(decodeURI(video.channelTitle), "</p>\n        <p class=\"video-item__published-date\">").concat((0,_utils__WEBPACK_IMPORTED_MODULE_1__.formatDate)(video.publishedAt), "</p>\n        <button id=\"").concat(video.id, "-save-button\" class=\"video-item__save-button button\" type=\"button\">\u2B07 \uC800\uC7A5</button>\n      </li>\n    ");
   },
   SKELETON: "\n    <div class=\"skeleton\">\n      <div class=\"image\"></div>\n      <h4 class=\"line\"></h4>\n      <p class=\"line\"></p>\n      <p class=\"line\"></p>\n      <button></button>\n    </div>\n  ",
-  MY_RESULT: "\n    <p>myresult</p>\n  "
+  MY_RESULT: "\n    <ul is=\"my-video-list\" id=\"unwatched-video-list\"></ul>\n    <ul is=\"my-video-list\" id=\"watched-video-list\"></ul>\n  "
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TEMPLATE);
 
