@@ -89,6 +89,7 @@ var CustomElement = /*#__PURE__*/function (_HTMLElement) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ERROR_MESSAGE": () => (/* binding */ ERROR_MESSAGE),
+/* harmony export */   "INFO_MESSAGE": () => (/* binding */ INFO_MESSAGE),
 /* harmony export */   "SEARCH_API": () => (/* binding */ SEARCH_API),
 /* harmony export */   "VIDEO": () => (/* binding */ VIDEO)
 /* harmony export */ });
@@ -110,6 +111,11 @@ var SEARCH_API = {
 var ERROR_MESSAGE = {
   FAIL_TO_REQUEST_API: '영상을 불러올 수 없습니다! 잠시 후 다시 시도해 주세요.',
   EXCEED_MAX_SAVABLE_COUNT: "\uCD5C\uB300 \uC800\uC7A5 \uAC1C\uC218\uB97C \uCD08\uACFC\uD558\uC600\uC2B5\uB2C8\uB2E4. \uB3D9\uC601\uC0C1\uC740 ".concat(VIDEO.MAX_SAVABLE_COUNT, "\uAC1C\uAE4C\uC9C0 \uC800\uC7A5 \uAC00\uB2A5\uD569\uB2C8\uB2E4.")
+};
+var INFO_MESSAGE = {
+  CONFIRM_REMOVE: '해당 영상을 삭제하시겠습니까?',
+  NO_WATCHED_VIDEO: '아직 시청한 영상이 없습니다.',
+  NO_UNWATCHED_VIDEO: '아직 저장된 영상이 없습니다.'
 };
 
 /***/ }),
@@ -610,6 +616,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils */ "./src/js/utils.js");
 /* harmony import */ var _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../stores/SavedVideo */ "./src/js/stores/SavedVideo.js");
 /* harmony import */ var _domains_State__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../domains/State */ "./src/js/domains/State.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../constants */ "./src/js/constants.js");
 
 
 
@@ -619,6 +626,7 @@ __webpack_require__.r(__webpack_exports__);
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
 
 
 
@@ -673,7 +681,7 @@ var MyVideoItem = /*#__PURE__*/function (_CustomElement) {
       }
 
       if (action === 'remove') {
-        (0,_utils__WEBPACK_IMPORTED_MODULE_7__.confirm)('해당 영상을 삭제하시겠습니까?', function () {
+        (0,_utils__WEBPACK_IMPORTED_MODULE_7__.confirm)(_constants__WEBPACK_IMPORTED_MODULE_10__.INFO_MESSAGE.CONFIRM_REMOVE, function () {
           return (0,_utils__WEBPACK_IMPORTED_MODULE_7__.emit)('.video-item__state-button', '@remove', {
             id: id
           }, _this2);
@@ -709,7 +717,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ "./node_modules/@babel/runtime/helpers/esm/wrapNativeSuper.js");
 /* harmony import */ var _templates__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../templates */ "./src/js/templates.js");
 /* harmony import */ var _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../stores/SavedVideo */ "./src/js/stores/SavedVideo.js");
-/* harmony import */ var _MyVideoItem__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./MyVideoItem */ "./src/js/elements/MyVideoItem.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../constants */ "./src/js/constants.js");
+/* harmony import */ var _MyVideoItem__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./MyVideoItem */ "./src/js/elements/MyVideoItem.js");
 
 
 
@@ -720,6 +729,7 @@ __webpack_require__.r(__webpack_exports__);
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
 
 
 
@@ -767,7 +777,7 @@ var MyVideoList = /*#__PURE__*/function (_HTMLUListElement) {
   }, {
     key: "showNoVideo",
     value: function showNoVideo(isWatchedList) {
-      this.innerHTML = _templates__WEBPACK_IMPORTED_MODULE_6__["default"].generateNoVideo(isWatchedList ? '아직 시청한 영상이 없습니다.' : '아직 저장된 영상이 없습니다.');
+      this.innerHTML = _templates__WEBPACK_IMPORTED_MODULE_6__["default"].generateNoVideo(isWatchedList ? _constants__WEBPACK_IMPORTED_MODULE_8__.INFO_MESSAGE.NO_WATCHED_VIDEO : _constants__WEBPACK_IMPORTED_MODULE_8__.INFO_MESSAGE.NO_WATCHED_VIDEO);
     }
   }]);
 
