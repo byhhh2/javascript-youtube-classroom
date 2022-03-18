@@ -171,22 +171,20 @@ var Save = /*#__PURE__*/function () {
       (0,_utils__WEBPACK_IMPORTED_MODULE_7__.on)('.video-item__save-button', '@save', function (e) {
         return _this.saveVideo(e.detail.videoId);
       }, videoItem);
-    } // eslint-disable-next-line max-lines-per-function
-
+    }
   }, {
     key: "saveVideo",
     value: function saveVideo(videoId) {
-      var videos = _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.getVideos();
-
       try {
-        if (videos.length >= _constants__WEBPACK_IMPORTED_MODULE_6__.VIDEO.MAX_SAVABLE_COUNT) {
+        if (!_stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.isStorable()) {
           throw new Error(_constants__WEBPACK_IMPORTED_MODULE_6__.ERROR_MESSAGE.EXCEED_MAX_SAVABLE_COUNT);
         }
 
         var videoInfo = _stores_SearchedVideo__WEBPACK_IMPORTED_MODULE_5__["default"].instance.findVideo(videoId);
-        _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.dispatch('save', JSON.stringify([].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(videos), [_objectSpread(_objectSpread({}, videoInfo), {}, {
+        var videos = _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.getVideos();
+        _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.dispatch('save', [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(videos), [_objectSpread(_objectSpread({}, videoInfo), {}, {
           isWatched: false
-        })])));
+        })]));
       } catch (error) {
         alert(error.message);
       }
@@ -413,14 +411,14 @@ var State = /*#__PURE__*/function () {
     value: function updateVideoState(videoId) {
       var currentVideo = _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.findVideo(videoId);
       currentVideo.isWatched = !currentVideo.isWatched;
-      _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.dispatch('watch', JSON.stringify((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.getVideos())));
+      _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.dispatch('watch', (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.getVideos()));
     }
   }, {
     key: "removeVideo",
     value: function removeVideo(videoId) {
-      _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.dispatch('remove', JSON.stringify(_stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.getVideos().filter(function (video) {
+      _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.dispatch('remove', _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.getVideos().filter(function (video) {
         return video.id !== videoId;
-      })));
+      }));
     }
   }], [{
     key: "instance",
@@ -1333,7 +1331,7 @@ var SavedVideo = /*#__PURE__*/function () {
   }, {
     key: "dispatch",
     value: function dispatch(action, data) {
-      localStorage.setItem('videos', data);
+      localStorage.setItem('videos', JSON.stringify(data));
 
       (0,_babel_runtime_helpers_classPrivateFieldSet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos, this.loadVideos());
 
