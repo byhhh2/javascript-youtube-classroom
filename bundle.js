@@ -990,7 +990,7 @@ var SearchResult = /*#__PURE__*/function (_CustomElement) {
     value: function connectedCallback() {
       (0,_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_2__["default"])((0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(SearchResult.prototype), "connectedCallback", this).call(this);
 
-      this.subscribe();
+      _stores_SearchedVideo__WEBPACK_IMPORTED_MODULE_6__["default"].instance.subscribe(this);
     }
   }, {
     key: "template",
@@ -998,16 +998,11 @@ var SearchResult = /*#__PURE__*/function (_CustomElement) {
       return _templates__WEBPACK_IMPORTED_MODULE_9__["default"].SEARCH_RESULT;
     }
   }, {
-    key: "subscribe",
-    value: function subscribe() {
-      _stores_SearchedVideo__WEBPACK_IMPORTED_MODULE_6__["default"].instance.subscribe(this);
-    }
-  }, {
     key: "notify",
     value: function notify(type, data) {
       if (type !== 'search') return;
 
-      if (data.length === 0) {
+      if (!data.length) {
         this.showNoResult();
         return;
       }
@@ -1017,13 +1012,13 @@ var SearchResult = /*#__PURE__*/function (_CustomElement) {
   }, {
     key: "showNoResult",
     value: function showNoResult() {
-      (0,_utils__WEBPACK_IMPORTED_MODULE_8__.$)('.search-result--no-result').classList.remove('hidden');
+      (0,_utils__WEBPACK_IMPORTED_MODULE_8__.$)('.search-result--no-result', this).classList.remove('hidden');
       (0,_utils__WEBPACK_IMPORTED_MODULE_8__.$)('ul', this).classList.add('hidden');
     }
   }, {
     key: "showResult",
     value: function showResult() {
-      (0,_utils__WEBPACK_IMPORTED_MODULE_8__.$)('.search-result--no-result').classList.add('hidden');
+      (0,_utils__WEBPACK_IMPORTED_MODULE_8__.$)('.search-result--no-result', this).classList.add('hidden');
       (0,_utils__WEBPACK_IMPORTED_MODULE_8__.$)('ul', this).classList.remove('hidden');
     }
   }]);
