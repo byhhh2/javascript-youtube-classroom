@@ -314,6 +314,9 @@ var Save = /*#__PURE__*/function () {
       (0,_utils__WEBPACK_IMPORTED_MODULE_6__.on)('.video-item__state-button', '@watch', function (e) {
         return _this2.updateVideoState(e.detail.id);
       }, videoItem);
+      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.on)('.video-item__state-button', '@remove', function (e) {
+        return _this2.removeVideo(e.detail.id);
+      }, videoItem);
     }
   }, {
     key: "saveVideo",
@@ -363,6 +366,13 @@ var Save = /*#__PURE__*/function () {
       var currentVideo = this.findVideo(videoId);
       currentVideo.isWatched = !currentVideo.isWatched;
       this.dispatch('watch', JSON.stringify((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])((0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos))));
+    }
+  }, {
+    key: "removeVideo",
+    value: function removeVideo(videoId) {
+      this.dispatch('remove', JSON.stringify((0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos).filter(function (video) {
+        return video.id !== videoId;
+      })));
     }
   }], [{
     key: "instance",
@@ -750,17 +760,35 @@ var MyVideoItem = /*#__PURE__*/function (_CustomElement) {
     value: function setEvent() {
       var _this = this;
 
-      (0,_utils__WEBPACK_IMPORTED_MODULE_8__.addEvent)(this, 'click', '.video-item__state-button', function () {
-        return _this.emitEvent();
+      (0,_utils__WEBPACK_IMPORTED_MODULE_8__.addEvent)(this, 'click', '.video-item__state-button', function (e) {
+        return _this.emitEvent(e);
       });
-    }
+    } // eslint-disable-next-line max-lines-per-function
+
   }, {
     key: "emitEvent",
-    value: function emitEvent() {
+    value: function emitEvent(e) {
       var id = this.dataset.videoId;
-      (0,_utils__WEBPACK_IMPORTED_MODULE_8__.emit)('.video-item__state-button', '@watch', {
-        id: id
-      }, this);
+
+      switch (e.target.dataset.action) {
+        case 'watch':
+          (0,_utils__WEBPACK_IMPORTED_MODULE_8__.emit)('.video-item__state-button', '@watch', {
+            id: id
+          }, this);
+          break;
+
+        case 'remove':
+          if (window.confirm('해당 영상을 삭제하시겠습니까?')) {
+            (0,_utils__WEBPACK_IMPORTED_MODULE_8__.emit)('.video-item__state-button', '@remove', {
+              id: id
+            }, this);
+          }
+
+          break;
+
+        default:
+          break;
+      }
     }
   }]);
 
