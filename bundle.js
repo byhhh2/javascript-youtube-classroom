@@ -1247,11 +1247,8 @@ var VideoList = /*#__PURE__*/function (_HTMLUListElement) {
   }, {
     key: "hideStoredVideoSaveButton",
     value: function hideStoredVideoSaveButton(videos) {
-      var storedVideoIds = _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_10__["default"].instance.getVideos().map(function (video) {
-        return video.videoId;
-      });
       videos.forEach(function (video) {
-        if (storedVideoIds.includes(video.id)) {
+        if (_stores_SavedVideo__WEBPACK_IMPORTED_MODULE_10__["default"].instance.findVideo(video.id)) {
           (0,_utils__WEBPACK_IMPORTED_MODULE_8__.$)("#".concat(video.id, "-save-button")).hidden = true;
         }
       });
