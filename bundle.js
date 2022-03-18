@@ -205,7 +205,7 @@ var VIDEO = {
 };
 var REDIRECT_SERVER_HOST = 'https://trusting-yonath-35b2a1.netlify.app';
 var SEARCH_API = {
-  URL: new URL('/youtube/v3/search', REDIRECT_SERVER_HOST),
+  URL: new URL('/dummy/youtube/v3/search', REDIRECT_SERVER_HOST),
   PARAMS: {
     part: 'snippet',
     type: 'video',
@@ -262,6 +262,8 @@ function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollect
 
 var _videos = /*#__PURE__*/new WeakMap();
 
+var _subscribers = /*#__PURE__*/new WeakMap();
+
 var Save = /*#__PURE__*/function () {
   function Save() {
     (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Save);
@@ -271,16 +273,46 @@ var Save = /*#__PURE__*/function () {
       value: void 0
     });
 
+    _classPrivateFieldInitSpec(this, _subscribers, {
+      writable: true,
+      value: []
+    });
+
     (0,_babel_runtime_helpers_classPrivateFieldSet__WEBPACK_IMPORTED_MODULE_5__["default"])(this, _videos, this.loadVideos());
   }
 
   (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Save, [{
+    key: "subscribe",
+    value: function subscribe(element) {
+      (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _subscribers).push(element);
+    }
+  }, {
+    key: "dispatch",
+    value: function dispatch(action, data) {
+      localStorage.setItem('videos', data);
+
+      (0,_babel_runtime_helpers_classPrivateFieldSet__WEBPACK_IMPORTED_MODULE_5__["default"])(this, _videos, this.loadVideos());
+
+      (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _subscribers).forEach(function (subscriber) {
+        subscriber.notify(action, data);
+      });
+    }
+  }, {
     key: "subscribeEvents",
     value: function subscribeEvents(videoItem) {
       var _this = this;
 
       (0,_utils__WEBPACK_IMPORTED_MODULE_6__.on)('.video-item__save-button', '@save', function (e) {
         return _this.saveVideo(e.detail.videoId);
+      }, videoItem);
+    }
+  }, {
+    key: "subscribeWatchEvent",
+    value: function subscribeWatchEvent(videoItem) {
+      var _this2 = this;
+
+      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.on)('.video-item__state-button', '@watch', function (e) {
+        return _this2.updateVideoState(e.detail.id);
       }, videoItem);
     }
   }, {
@@ -292,11 +324,9 @@ var Save = /*#__PURE__*/function () {
         }
 
         var videoInfo = _VideoStore__WEBPACK_IMPORTED_MODULE_8__["default"].instance.findVideo(videoId);
-        localStorage.setItem('videos', JSON.stringify([].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])((0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos)), [_objectSpread(_objectSpread({}, videoInfo), {}, {
+        this.dispatch('save', JSON.stringify([].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])((0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos)), [_objectSpread(_objectSpread({}, videoInfo), {}, {
           isWatched: false
         })])));
-
-        (0,_babel_runtime_helpers_classPrivateFieldSet__WEBPACK_IMPORTED_MODULE_5__["default"])(this, _videos, this.loadVideos());
       } catch (error) {
         alert(error.message);
       }
@@ -326,6 +356,13 @@ var Save = /*#__PURE__*/function () {
       return (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos).find(function (video) {
         return video.id === videoId;
       });
+    }
+  }, {
+    key: "updateVideoState",
+    value: function updateVideoState(videoId) {
+      var currentVideo = this.findVideo(videoId);
+      currentVideo.isWatched = !currentVideo.isWatched;
+      this.dispatch('watch', JSON.stringify((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])((0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos))));
     }
   }], [{
     key: "instance",
@@ -670,6 +707,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _abstract_CustomElement__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../abstract/CustomElement */ "./src/js/abstract/CustomElement.js");
 /* harmony import */ var _templates__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../templates */ "./src/js/templates.js");
 /* harmony import */ var _domains_Save__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../domains/Save */ "./src/js/domains/Save.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils */ "./src/js/utils.js");
 
 
 
@@ -679,6 +717,7 @@ __webpack_require__.r(__webpack_exports__);
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
 
 
 
@@ -699,11 +738,29 @@ var MyVideoItem = /*#__PURE__*/function (_CustomElement) {
     key: "render",
     value: function render() {
       this.innerHTML = this.template(_domains_Save__WEBPACK_IMPORTED_MODULE_7__["default"].instance.findVideo(this.dataset.videoId));
+      _domains_Save__WEBPACK_IMPORTED_MODULE_7__["default"].instance.subscribeWatchEvent(this);
     }
   }, {
     key: "template",
     value: function template(video) {
       return _templates__WEBPACK_IMPORTED_MODULE_6__["default"].generateMyVideoItem(video);
+    }
+  }, {
+    key: "setEvent",
+    value: function setEvent() {
+      var _this = this;
+
+      (0,_utils__WEBPACK_IMPORTED_MODULE_8__.addEvent)(this, 'click', '.video-item__state-button', function () {
+        return _this.emitEvent();
+      });
+    }
+  }, {
+    key: "emitEvent",
+    value: function emitEvent() {
+      var id = this.dataset.videoId;
+      (0,_utils__WEBPACK_IMPORTED_MODULE_8__.emit)('.video-item__state-button', '@watch', {
+        id: id
+      }, this);
     }
   }]);
 
@@ -763,6 +820,7 @@ var MyVideoList = /*#__PURE__*/function (_HTMLUListElement) {
     key: "connectedCallback",
     value: function connectedCallback() {
       this.render();
+      _domains_Save__WEBPACK_IMPORTED_MODULE_6__["default"].instance.subscribe(this);
     }
   }, {
     key: "render",
@@ -773,6 +831,12 @@ var MyVideoList = /*#__PURE__*/function (_HTMLUListElement) {
       videos.forEach(function (video) {
         _this.insertAdjacentHTML('beforeend', "<my-video-item data-video-id=\"".concat(video.id, "\"></my-video-item>"));
       });
+    }
+  }, {
+    key: "notify",
+    value: function notify() {
+      this.textContent = '';
+      this.render();
     }
   }]);
 
@@ -1305,8 +1369,9 @@ var TEMPLATE = {
   },
   SKELETON: "\n    <div class=\"skeleton\">\n      <div class=\"image\"></div>\n      <h4 class=\"line\"></h4>\n      <p class=\"line\"></p>\n      <p class=\"line\"></p>\n      <button></button>\n    </div>\n  ",
   MY_RESULT: "\n    <ul is=\"my-video-list\" id=\"unwatched-video-list\"></ul>\n    <ul is=\"my-video-list\" id=\"watched-video-list\" class=\"hidden\"></ul>\n  ",
+  // eslint-disable-next-line max-lines-per-function
   generateMyVideoItem: function generateMyVideoItem(video) {
-    return "\n    <li class=\"video-item\" data-video-id=\"".concat(video.id, "\">\n      <img\n        src=\"").concat(decodeURI(video.thumbnail), "\"\n        alt=\"video-item-thumbnail\" class=\"video-item__thumbnail\">\n      <h4 class=\"video-item__title\">").concat(decodeURI(video.title), "</h4>\n      <p class=\"video-item__channel-name\">").concat(decodeURI(video.channelTitle), "</p>\n      <p class=\"video-item__published-date\">").concat((0,_utils__WEBPACK_IMPORTED_MODULE_1__.formatDate)(video.publishedAt), "</p>\n      <div class=\"video-item__state\">\n        <button type=\"button\" class=\"video-item__state-button button\">\u2705</button>\n        <button type=\"button\" class=\"video-item__state-button button\">\uD83D\uDDD1\uFE0F</button>\n      <div>\n    </li>");
+    return "\n    <li class=\"video-item\" data-video-id=\"".concat(video.id, "\">\n      <img\n        src=\"").concat(decodeURI(video.thumbnail), "\"\n        alt=\"video-item-thumbnail\" class=\"video-item__thumbnail\">\n      <h4 class=\"video-item__title\">").concat(decodeURI(video.title), "</h4>\n      <p class=\"video-item__channel-name\">").concat(decodeURI(video.channelTitle), "</p>\n      <p class=\"video-item__published-date\">").concat((0,_utils__WEBPACK_IMPORTED_MODULE_1__.formatDate)(video.publishedAt), "</p>\n      <div class=\"video-item__state\">\n        <button type=\"button\" class=\"video-item__state-button button").concat(video.isWatched ? ' video-item__state-button--watched' : '', "\" data-action=\"watch\">\u2705</button>\n        <button type=\"button\" class=\"video-item__state-button button\" data-action=\"remove\">\uD83D\uDDD1\uFE0F</button>\n      <div>\n    </li>");
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TEMPLATE);
@@ -1576,7 +1641,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".modal-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100vw;\n  height: 100vh;\n  position: fixed;\n  top: 0;\n  left: 0;\n}\n\n.modal-container.hide {\n  display: none;\n}\n\n.dimmer {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n.search-modal {\n  position: relative;\n  height: 727px;\n  background: #ffffff;\n  border: 1px solid rgba(0, 0, 0, 0.12);\n  border-radius: 4px;\n  padding: 50px 30px 32px 30px;\n}\n\n@media (min-width: 1080px) {\n  .search-modal {\n    width: 1080px;\n  }\n\n  search-result ul {\n    width: 1040px;\n  }\n}\n\n@media (min-width: 940px) and (max-width: 1080px) {\n  .search-modal {\n    width: 820px;\n  }\n\n  search-result ul {\n    width: 780px;\n  }\n}\n\n@media (min-width: 700px) and (max-width: 940px) {\n  .search-modal {\n    width: 560px;\n  }\n\n  search-result ul {\n    width: 520px;\n  }\n}\n\n@media (max-width: 700px) {\n  .search-modal {\n    width: 300px;\n  }\n\n  search-result ul {\n    width: 260px;\n  }\n\n  #search-input-keyword {\n    width: 170px;\n  }\n\n  #search-button {\n    width: 40px;\n  }\n\n  #search-modal-title {\n    font-size: 23px;\n  }\n}\n\n.search-modal__title {\n  font-weight: bold;\n  font-size: 34px;\n  line-height: 36px;\n  text-align: center;\n  margin-bottom: 40px;\n}\n\nsearch-form {\n  display: flex;\n  justify-content: center;\n  margin-bottom: 40px;\n}\n\n.search-input__keyword {\n  width: 400px;\n  height: 36px;\n  margin-right: 20px;\n  padding: 4px 8px;\n  border: 1px solid #b4b4b4;\n  border-radius: 4px;\n}\n\n.search-input__keyword::placeholder {\n  color: #8b8b8b;\n  font-size: 16px;\n}\n\n.search-input__search-button {\n  width: 72px;\n  height: 36px;\n  background: #00bcd4;\n  color: #ffffff;\n}\n\nsearch-result.search-result--no-result {\n  justify-content: center;\n  align-items: center;\n}\n\n.no-result {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  height: 450px;\n}\n\n.no-result__image {\n  width: 190px;\n  height: 140px;\n  margin-bottom: 32px;\n}\n\n.no-result__description {\n  font-size: 16px;\n  line-height: 150%;\n  text-align: center;\n  letter-spacing: 0.5px;\n}\n\nsearch-result ul {\n  height: 493px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 32px 20px;\n  overflow-y: scroll;\n}\n\n.video-item {\n  position: relative;\n  width: 240px;\n  height: 255px;\n}\n\n.video-item__thumbnail {\n  width: 100%;\n  height: 135px;\n}\n\n.video-item__title {\n  font-weight: bold;\n  font-size: 16px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  margin: 4px 0;\n}\n\n.video-item__channel-name {\n  font-size: 16px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.video-item__published-date {\n  font-size: 12px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n}\n\n.video-item__save-button {\n  position: absolute;\n  right: 0;\n  width: 80px;\n  height: 36px;\n  background: #f9f9f9;\n  margin-top: 4px;\n}\n\n.video-item__save-button:hover {\n  background: #efefef;\n}\n\n.video-item__state {\n  float: right;\n}\n\n.video-item__state-button {\n  width: 36px;\n  height: 36px;\n  background: #f9f9f9;\n  margin-top: 4px;\n}\n", "",{"version":3,"sources":["webpack://./src/css/modal.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,YAAY;EACZ,aAAa;EACb,eAAe;EACf,MAAM;EACN,OAAO;AACT;;AAEA;EACE,aAAa;AACf;;AAEA;EACE,kBAAkB;EAClB,WAAW;EACX,YAAY;EACZ,8BAA8B;AAChC;;AAEA;EACE,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,qCAAqC;EACrC,kBAAkB;EAClB,4BAA4B;AAC9B;;AAEA;EACE;IACE,aAAa;EACf;;EAEA;IACE,aAAa;EACf;AACF;;AAEA;EACE;IACE,YAAY;EACd;;EAEA;IACE,YAAY;EACd;AACF;;AAEA;EACE;IACE,YAAY;EACd;;EAEA;IACE,YAAY;EACd;AACF;;AAEA;EACE;IACE,YAAY;EACd;;EAEA;IACE,YAAY;EACd;;EAEA;IACE,YAAY;EACd;;EAEA;IACE,WAAW;EACb;;EAEA;IACE,eAAe;EACjB;AACF;;AAEA;EACE,iBAAiB;EACjB,eAAe;EACf,iBAAiB;EACjB,kBAAkB;EAClB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,YAAY;EACZ,YAAY;EACZ,kBAAkB;EAClB,gBAAgB;EAChB,yBAAyB;EACzB,kBAAkB;AACpB;;AAEA;EACE,cAAc;EACd,eAAe;AACjB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,mBAAmB;EACnB,cAAc;AAChB;;AAEA;EACE,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,sBAAsB;EACtB,aAAa;AACf;;AAEA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;AACrB;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,kBAAkB;EAClB,qBAAqB;AACvB;;AAEA;EACE,aAAa;EACb,aAAa;EACb,mBAAmB;EACnB,eAAe;EACf,cAAc;EACd,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;EAClB,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,WAAW;EACX,aAAa;AACf;;AAEA;EACE,iBAAiB;EACjB,eAAe;EACf,iBAAiB;EACjB,qBAAqB;EACrB,mBAAmB;EACnB,gBAAgB;EAChB,uBAAuB;EACvB,aAAa;AACf;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,qBAAqB;EACrB,mBAAmB;EACnB,gBAAgB;EAChB,uBAAuB;AACzB;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,qBAAqB;AACvB;;AAEA;EACE,kBAAkB;EAClB,QAAQ;EACR,WAAW;EACX,YAAY;EACZ,mBAAmB;EACnB,eAAe;AACjB;;AAEA;EACE,mBAAmB;AACrB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,mBAAmB;EACnB,eAAe;AACjB","sourcesContent":[".modal-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100vw;\n  height: 100vh;\n  position: fixed;\n  top: 0;\n  left: 0;\n}\n\n.modal-container.hide {\n  display: none;\n}\n\n.dimmer {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n.search-modal {\n  position: relative;\n  height: 727px;\n  background: #ffffff;\n  border: 1px solid rgba(0, 0, 0, 0.12);\n  border-radius: 4px;\n  padding: 50px 30px 32px 30px;\n}\n\n@media (min-width: 1080px) {\n  .search-modal {\n    width: 1080px;\n  }\n\n  search-result ul {\n    width: 1040px;\n  }\n}\n\n@media (min-width: 940px) and (max-width: 1080px) {\n  .search-modal {\n    width: 820px;\n  }\n\n  search-result ul {\n    width: 780px;\n  }\n}\n\n@media (min-width: 700px) and (max-width: 940px) {\n  .search-modal {\n    width: 560px;\n  }\n\n  search-result ul {\n    width: 520px;\n  }\n}\n\n@media (max-width: 700px) {\n  .search-modal {\n    width: 300px;\n  }\n\n  search-result ul {\n    width: 260px;\n  }\n\n  #search-input-keyword {\n    width: 170px;\n  }\n\n  #search-button {\n    width: 40px;\n  }\n\n  #search-modal-title {\n    font-size: 23px;\n  }\n}\n\n.search-modal__title {\n  font-weight: bold;\n  font-size: 34px;\n  line-height: 36px;\n  text-align: center;\n  margin-bottom: 40px;\n}\n\nsearch-form {\n  display: flex;\n  justify-content: center;\n  margin-bottom: 40px;\n}\n\n.search-input__keyword {\n  width: 400px;\n  height: 36px;\n  margin-right: 20px;\n  padding: 4px 8px;\n  border: 1px solid #b4b4b4;\n  border-radius: 4px;\n}\n\n.search-input__keyword::placeholder {\n  color: #8b8b8b;\n  font-size: 16px;\n}\n\n.search-input__search-button {\n  width: 72px;\n  height: 36px;\n  background: #00bcd4;\n  color: #ffffff;\n}\n\nsearch-result.search-result--no-result {\n  justify-content: center;\n  align-items: center;\n}\n\n.no-result {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  height: 450px;\n}\n\n.no-result__image {\n  width: 190px;\n  height: 140px;\n  margin-bottom: 32px;\n}\n\n.no-result__description {\n  font-size: 16px;\n  line-height: 150%;\n  text-align: center;\n  letter-spacing: 0.5px;\n}\n\nsearch-result ul {\n  height: 493px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 32px 20px;\n  overflow-y: scroll;\n}\n\n.video-item {\n  position: relative;\n  width: 240px;\n  height: 255px;\n}\n\n.video-item__thumbnail {\n  width: 100%;\n  height: 135px;\n}\n\n.video-item__title {\n  font-weight: bold;\n  font-size: 16px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  margin: 4px 0;\n}\n\n.video-item__channel-name {\n  font-size: 16px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.video-item__published-date {\n  font-size: 12px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n}\n\n.video-item__save-button {\n  position: absolute;\n  right: 0;\n  width: 80px;\n  height: 36px;\n  background: #f9f9f9;\n  margin-top: 4px;\n}\n\n.video-item__save-button:hover {\n  background: #efefef;\n}\n\n.video-item__state {\n  float: right;\n}\n\n.video-item__state-button {\n  width: 36px;\n  height: 36px;\n  background: #f9f9f9;\n  margin-top: 4px;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".modal-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100vw;\n  height: 100vh;\n  position: fixed;\n  top: 0;\n  left: 0;\n}\n\n.modal-container.hide {\n  display: none;\n}\n\n.dimmer {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n.search-modal {\n  position: relative;\n  height: 727px;\n  background: #ffffff;\n  border: 1px solid rgba(0, 0, 0, 0.12);\n  border-radius: 4px;\n  padding: 50px 30px 32px 30px;\n}\n\n@media (min-width: 1080px) {\n  .search-modal {\n    width: 1080px;\n  }\n\n  search-result ul {\n    width: 1040px;\n  }\n}\n\n@media (min-width: 940px) and (max-width: 1080px) {\n  .search-modal {\n    width: 820px;\n  }\n\n  search-result ul {\n    width: 780px;\n  }\n}\n\n@media (min-width: 700px) and (max-width: 940px) {\n  .search-modal {\n    width: 560px;\n  }\n\n  search-result ul {\n    width: 520px;\n  }\n}\n\n@media (max-width: 700px) {\n  .search-modal {\n    width: 300px;\n  }\n\n  search-result ul {\n    width: 260px;\n  }\n\n  #search-input-keyword {\n    width: 170px;\n  }\n\n  #search-button {\n    width: 40px;\n  }\n\n  #search-modal-title {\n    font-size: 23px;\n  }\n}\n\n.search-modal__title {\n  font-weight: bold;\n  font-size: 34px;\n  line-height: 36px;\n  text-align: center;\n  margin-bottom: 40px;\n}\n\nsearch-form {\n  display: flex;\n  justify-content: center;\n  margin-bottom: 40px;\n}\n\n.search-input__keyword {\n  width: 400px;\n  height: 36px;\n  margin-right: 20px;\n  padding: 4px 8px;\n  border: 1px solid #b4b4b4;\n  border-radius: 4px;\n}\n\n.search-input__keyword::placeholder {\n  color: #8b8b8b;\n  font-size: 16px;\n}\n\n.search-input__search-button {\n  width: 72px;\n  height: 36px;\n  background: #00bcd4;\n  color: #ffffff;\n}\n\nsearch-result.search-result--no-result {\n  justify-content: center;\n  align-items: center;\n}\n\n.no-result {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  height: 450px;\n}\n\n.no-result__image {\n  width: 190px;\n  height: 140px;\n  margin-bottom: 32px;\n}\n\n.no-result__description {\n  font-size: 16px;\n  line-height: 150%;\n  text-align: center;\n  letter-spacing: 0.5px;\n}\n\nsearch-result ul {\n  height: 493px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 32px 20px;\n  overflow-y: scroll;\n}\n\n.video-item {\n  position: relative;\n  width: 240px;\n  height: 255px;\n}\n\n.video-item__thumbnail {\n  width: 100%;\n  height: 135px;\n}\n\n.video-item__title {\n  font-weight: bold;\n  font-size: 16px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  margin: 4px 0;\n}\n\n.video-item__channel-name {\n  font-size: 16px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.video-item__published-date {\n  font-size: 12px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n}\n\n.video-item__save-button {\n  position: absolute;\n  right: 0;\n  width: 80px;\n  height: 36px;\n  background: #f9f9f9;\n  margin-top: 4px;\n}\n\n.video-item__save-button:hover {\n  background: #efefef;\n}\n\n.video-item__state {\n  float: right;\n}\n\n.video-item__state-button {\n  width: 36px;\n  height: 36px;\n  background: #f9f9f9;\n  margin-top: 4px;\n}\n\n.video-item__state-button:hover {\n  background: #00bcd41f;\n}\n\n.video-item__state-button--watched {\n  background: #00bcd41f;\n}\n\n.video-item__state-button--watched:hover {\n  background: #f9f9f9;\n}\n", "",{"version":3,"sources":["webpack://./src/css/modal.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,YAAY;EACZ,aAAa;EACb,eAAe;EACf,MAAM;EACN,OAAO;AACT;;AAEA;EACE,aAAa;AACf;;AAEA;EACE,kBAAkB;EAClB,WAAW;EACX,YAAY;EACZ,8BAA8B;AAChC;;AAEA;EACE,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,qCAAqC;EACrC,kBAAkB;EAClB,4BAA4B;AAC9B;;AAEA;EACE;IACE,aAAa;EACf;;EAEA;IACE,aAAa;EACf;AACF;;AAEA;EACE;IACE,YAAY;EACd;;EAEA;IACE,YAAY;EACd;AACF;;AAEA;EACE;IACE,YAAY;EACd;;EAEA;IACE,YAAY;EACd;AACF;;AAEA;EACE;IACE,YAAY;EACd;;EAEA;IACE,YAAY;EACd;;EAEA;IACE,YAAY;EACd;;EAEA;IACE,WAAW;EACb;;EAEA;IACE,eAAe;EACjB;AACF;;AAEA;EACE,iBAAiB;EACjB,eAAe;EACf,iBAAiB;EACjB,kBAAkB;EAClB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,YAAY;EACZ,YAAY;EACZ,kBAAkB;EAClB,gBAAgB;EAChB,yBAAyB;EACzB,kBAAkB;AACpB;;AAEA;EACE,cAAc;EACd,eAAe;AACjB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,mBAAmB;EACnB,cAAc;AAChB;;AAEA;EACE,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,sBAAsB;EACtB,aAAa;AACf;;AAEA;EACE,YAAY;EACZ,aAAa;EACb,mBAAmB;AACrB;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,kBAAkB;EAClB,qBAAqB;AACvB;;AAEA;EACE,aAAa;EACb,aAAa;EACb,mBAAmB;EACnB,eAAe;EACf,cAAc;EACd,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;EAClB,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,WAAW;EACX,aAAa;AACf;;AAEA;EACE,iBAAiB;EACjB,eAAe;EACf,iBAAiB;EACjB,qBAAqB;EACrB,mBAAmB;EACnB,gBAAgB;EAChB,uBAAuB;EACvB,aAAa;AACf;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,qBAAqB;EACrB,mBAAmB;EACnB,gBAAgB;EAChB,uBAAuB;AACzB;;AAEA;EACE,eAAe;EACf,iBAAiB;EACjB,qBAAqB;AACvB;;AAEA;EACE,kBAAkB;EAClB,QAAQ;EACR,WAAW;EACX,YAAY;EACZ,mBAAmB;EACnB,eAAe;AACjB;;AAEA;EACE,mBAAmB;AACrB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,mBAAmB;EACnB,eAAe;AACjB;;AAEA;EACE,qBAAqB;AACvB;;AAEA;EACE,qBAAqB;AACvB;;AAEA;EACE,mBAAmB;AACrB","sourcesContent":[".modal-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100vw;\n  height: 100vh;\n  position: fixed;\n  top: 0;\n  left: 0;\n}\n\n.modal-container.hide {\n  display: none;\n}\n\n.dimmer {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  background: rgba(0, 0, 0, 0.5);\n}\n\n.search-modal {\n  position: relative;\n  height: 727px;\n  background: #ffffff;\n  border: 1px solid rgba(0, 0, 0, 0.12);\n  border-radius: 4px;\n  padding: 50px 30px 32px 30px;\n}\n\n@media (min-width: 1080px) {\n  .search-modal {\n    width: 1080px;\n  }\n\n  search-result ul {\n    width: 1040px;\n  }\n}\n\n@media (min-width: 940px) and (max-width: 1080px) {\n  .search-modal {\n    width: 820px;\n  }\n\n  search-result ul {\n    width: 780px;\n  }\n}\n\n@media (min-width: 700px) and (max-width: 940px) {\n  .search-modal {\n    width: 560px;\n  }\n\n  search-result ul {\n    width: 520px;\n  }\n}\n\n@media (max-width: 700px) {\n  .search-modal {\n    width: 300px;\n  }\n\n  search-result ul {\n    width: 260px;\n  }\n\n  #search-input-keyword {\n    width: 170px;\n  }\n\n  #search-button {\n    width: 40px;\n  }\n\n  #search-modal-title {\n    font-size: 23px;\n  }\n}\n\n.search-modal__title {\n  font-weight: bold;\n  font-size: 34px;\n  line-height: 36px;\n  text-align: center;\n  margin-bottom: 40px;\n}\n\nsearch-form {\n  display: flex;\n  justify-content: center;\n  margin-bottom: 40px;\n}\n\n.search-input__keyword {\n  width: 400px;\n  height: 36px;\n  margin-right: 20px;\n  padding: 4px 8px;\n  border: 1px solid #b4b4b4;\n  border-radius: 4px;\n}\n\n.search-input__keyword::placeholder {\n  color: #8b8b8b;\n  font-size: 16px;\n}\n\n.search-input__search-button {\n  width: 72px;\n  height: 36px;\n  background: #00bcd4;\n  color: #ffffff;\n}\n\nsearch-result.search-result--no-result {\n  justify-content: center;\n  align-items: center;\n}\n\n.no-result {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  flex-direction: column;\n  height: 450px;\n}\n\n.no-result__image {\n  width: 190px;\n  height: 140px;\n  margin-bottom: 32px;\n}\n\n.no-result__description {\n  font-size: 16px;\n  line-height: 150%;\n  text-align: center;\n  letter-spacing: 0.5px;\n}\n\nsearch-result ul {\n  height: 493px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 32px 20px;\n  overflow-y: scroll;\n}\n\n.video-item {\n  position: relative;\n  width: 240px;\n  height: 255px;\n}\n\n.video-item__thumbnail {\n  width: 100%;\n  height: 135px;\n}\n\n.video-item__title {\n  font-weight: bold;\n  font-size: 16px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  margin: 4px 0;\n}\n\n.video-item__channel-name {\n  font-size: 16px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.video-item__published-date {\n  font-size: 12px;\n  line-height: 24px;\n  letter-spacing: 0.5px;\n}\n\n.video-item__save-button {\n  position: absolute;\n  right: 0;\n  width: 80px;\n  height: 36px;\n  background: #f9f9f9;\n  margin-top: 4px;\n}\n\n.video-item__save-button:hover {\n  background: #efefef;\n}\n\n.video-item__state {\n  float: right;\n}\n\n.video-item__state-button {\n  width: 36px;\n  height: 36px;\n  background: #f9f9f9;\n  margin-top: 4px;\n}\n\n.video-item__state-button:hover {\n  background: #00bcd41f;\n}\n\n.video-item__state-button--watched {\n  background: #00bcd41f;\n}\n\n.video-item__state-button--watched:hover {\n  background: #f9f9f9;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
