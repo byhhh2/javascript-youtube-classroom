@@ -314,6 +314,13 @@ var Save = /*#__PURE__*/function () {
       return (_JSON$parse = JSON.parse(localStorage.getItem('videos'))) !== null && _JSON$parse !== void 0 ? _JSON$parse : [];
     }
   }, {
+    key: "getFilteredVideos",
+    value: function getFilteredVideos(state) {
+      return (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos).filter(function (video) {
+        return video.isWatched === state;
+      });
+    }
+  }, {
     key: "findVideo",
     value: function findVideo(videoId) {
       return (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos).find(function (video) {
@@ -546,6 +553,9 @@ var MyClassroom = /*#__PURE__*/function (_CustomElement) {
     key: "setEvent",
     value: function setEvent() {
       (0,_utils__WEBPACK_IMPORTED_MODULE_6__.addEvent)(this, 'click', '#search-modal-button', this.showSearchModal);
+      (0,_utils__WEBPACK_IMPORTED_MODULE_6__.addEvent)(this, 'click', '.menu', function (e) {
+        return (0,_utils__WEBPACK_IMPORTED_MODULE_6__.$)('my-result').switchMenu(e);
+      });
     }
   }, {
     key: "showSearchModal",
@@ -580,7 +590,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _abstract_CustomElement__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../abstract/CustomElement */ "./src/js/abstract/CustomElement.js");
 /* harmony import */ var _templates__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../templates */ "./src/js/templates.js");
-/* harmony import */ var _MyVideoList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./MyVideoList */ "./src/js/elements/MyVideoList.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils */ "./src/js/utils.js");
+/* harmony import */ var _MyVideoList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./MyVideoList */ "./src/js/elements/MyVideoList.js");
 
 
 
@@ -590,6 +601,7 @@ __webpack_require__.r(__webpack_exports__);
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
 
 
 
@@ -610,6 +622,24 @@ var MyResult = /*#__PURE__*/function (_CustomElement) {
     key: "template",
     value: function template() {
       return _templates__WEBPACK_IMPORTED_MODULE_6__["default"].MY_RESULT;
+    }
+  }, {
+    key: "switchMenu",
+    value: function switchMenu(e) {
+      if (e.target.tagName !== 'LABEL') return;
+      this[e.target.dataset.action]();
+    }
+  }, {
+    key: "showWatchedVideoList",
+    value: function showWatchedVideoList() {
+      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#unwatched-video-list').classList.add('hidden');
+      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#watched-video-list').classList.remove('hidden');
+    }
+  }, {
+    key: "showUnwatchedVideoList",
+    value: function showUnwatchedVideoList() {
+      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#watched-video-list').classList.add('hidden');
+      (0,_utils__WEBPACK_IMPORTED_MODULE_7__.$)('#unwatched-video-list').classList.remove('hidden');
     }
   }]);
 
@@ -739,7 +769,7 @@ var MyVideoList = /*#__PURE__*/function (_HTMLUListElement) {
     value: function render() {
       var _this = this;
 
-      var videos = _domains_Save__WEBPACK_IMPORTED_MODULE_6__["default"].instance.getVideos();
+      var videos = _domains_Save__WEBPACK_IMPORTED_MODULE_6__["default"].instance.getFilteredVideos(!this.id.includes('unwatched'));
       videos.forEach(function (video) {
         _this.insertAdjacentHTML('beforeend', "<my-video-item data-video-id=\"".concat(video.id, "\"></my-video-item>"));
       });
@@ -1266,7 +1296,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var TEMPLATE = {
-  MY_CLASSROOM: "\n    <main id=\"app\" class=\"classroom-container\">\n      <h1 id=\"main-title\" class=\"classroom-container__title\">\uD83D\uDC69\uD83C\uDFFB\u200D\uD83D\uDCBB \uB098\uB9CC\uC758 \uC720\uD29C\uBE0C \uAC15\uC758\uC2E4 \uD83D\uDC68\uD83C\uDFFB\u200D\uD83D\uDCBB</h1>\n      <nav class=\"nav\">\n        <div class=\"menu\">\n          <input id=\"watched-menu\" type=\"radio\" name=\"menu\" value=\"watched-menu\" checked>\n          <label class=\"menu__button menu__button--left\" for=\"watched-menu\">\uD83D\uDC41\uFE0F \uBCFC \uC601\uC0C1</label>\n          <input id=\"unwatched-menu\" type=\"radio\" name=\"menu\" value=\"unwatched-menu\">\n          <label class=\"menu__button menu__button--right\" for=\"unwatched-menu\">\u2705 \uBCF8 \uC601\uC0C1</label>\n        </div>\n        <button id=\"search-modal-button\" class=\"button nav__button\" type=\"button\">\uD83D\uDD0D \uAC80\uC0C9</button>\n      </nav>\n      <my-result></my-result>\n    </main>\n  ",
+  MY_CLASSROOM: "\n    <main id=\"app\" class=\"classroom-container\">\n      <h1 id=\"main-title\" class=\"classroom-container__title\">\uD83D\uDC69\uD83C\uDFFB\u200D\uD83D\uDCBB \uB098\uB9CC\uC758 \uC720\uD29C\uBE0C \uAC15\uC758\uC2E4 \uD83D\uDC68\uD83C\uDFFB\u200D\uD83D\uDCBB</h1>\n      <nav class=\"nav\">\n        <div class=\"menu\">\n          <input id=\"unwatched-menu\" type=\"radio\" name=\"menu\" value=\"unwatched-menu\" checked>\n          <label class=\"menu__button menu__button--left\" for=\"unwatched-menu\" data-action=\"showUnwatchedVideoList\">\uD83D\uDC41\uFE0F \uBCFC \uC601\uC0C1</label>\n          <input id=\"watched-menu\" type=\"radio\" name=\"menu\" value=\"watched-menu\">\n          <label class=\"menu__button menu__button--right\" for=\"watched-menu\" data-action=\"showWatchedVideoList\">\u2705 \uBCF8 \uC601\uC0C1</label>\n        </div>\n        <button id=\"search-modal-button\" class=\"button nav__button\" type=\"button\">\uD83D\uDD0D \uAC80\uC0C9</button>\n      </nav>\n      <my-result></my-result>\n    </main>\n  ",
   SEARCH_MODAL: "\n    <div class=\"modal-container hide\">\n      <div class=\"dimmer\"></div>\n      <div class=\"search-modal\" role=\"dialog\" aria-labelledby=\"search-modal-title\">\n        <h2 id=\"search-modal-title\" class=\"search-modal__title\">\uD83D\uDD0D \uBCF4\uACE0\uC2F6\uC740 \uC601\uC0C1 \uCC3E\uAE30 \uD83D\uDD0D</h2>\n        <search-form></search-form>\n        <search-result></search-result>\n      </div>\n    </div>\n  ",
   SEARCH_FORM: "\n    <form>\n      <h3 hidden>\uAC80\uC0C9\uC5B4 \uC785\uB825</h3>\n      <input\n        id=\"search-input-keyword\"\n        placeholder=\"\uAC80\uC0C9\"\n        class=\"search-input__keyword\"\n        required\n      />\n      <button id=\"search-button\" class=\"search-input__search-button button\">\uAC80\uC0C9</button>\n    </form>\n  ",
   SEARCH_RESULT: "\n    <h3 hidden>\uAC80\uC0C9 \uACB0\uACFC</h3>\n    <ul is=\"video-list\"></ul>\n    <section class=\"search-result search-result--no-result hidden\">\n      <h3 hidden>\uAC80\uC0C9 \uACB0\uACFC</h3>\n      <div class=\"no-result\">\n        <img src=".concat(_assets_images_not_found_png__WEBPACK_IMPORTED_MODULE_0__["default"], " alt=\"no result image\" class=\"no-result__image\">\n        <p class=\"no-result__description\">\n          \uAC80\uC0C9 \uACB0\uACFC\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4<br />\n          \uB2E4\uB978 \uD0A4\uC6CC\uB4DC\uB85C \uAC80\uC0C9\uD574\uBCF4\uC138\uC694\n        </p>\n      </div>\n    </section>\n  "),
@@ -1274,7 +1304,7 @@ var TEMPLATE = {
     return "\n      <li class=\"video-item\" data-video-id=\"".concat(video.id, "\">\n        <img\n          src=\"").concat(decodeURI(video.thumbnail), "\"\n          alt=\"video-item-thumbnail\" class=\"video-item__thumbnail\">\n        <h4 class=\"video-item__title\">").concat(decodeURI(video.title), "</h4>\n        <p class=\"video-item__channel-name\">").concat(decodeURI(video.channelTitle), "</p>\n        <p class=\"video-item__published-date\">").concat((0,_utils__WEBPACK_IMPORTED_MODULE_1__.formatDate)(video.publishedAt), "</p>\n        <button id=\"").concat(video.id, "-save-button\" class=\"video-item__save-button button\" type=\"button\">\u2B07 \uC800\uC7A5</button>\n      </li>\n    ");
   },
   SKELETON: "\n    <div class=\"skeleton\">\n      <div class=\"image\"></div>\n      <h4 class=\"line\"></h4>\n      <p class=\"line\"></p>\n      <p class=\"line\"></p>\n      <button></button>\n    </div>\n  ",
-  MY_RESULT: "\n    <ul is=\"my-video-list\" id=\"unwatched-video-list\"></ul>\n    <ul is=\"my-video-list\" id=\"watched-video-list\"></ul>\n  ",
+  MY_RESULT: "\n    <ul is=\"my-video-list\" id=\"unwatched-video-list\"></ul>\n    <ul is=\"my-video-list\" id=\"watched-video-list\" class=\"hidden\"></ul>\n  ",
   generateMyVideoItem: function generateMyVideoItem(video) {
     return "\n    <li class=\"video-item\" data-video-id=\"".concat(video.id, "\">\n      <img\n        src=\"").concat(decodeURI(video.thumbnail), "\"\n        alt=\"video-item-thumbnail\" class=\"video-item__thumbnail\">\n      <h4 class=\"video-item__title\">").concat(decodeURI(video.title), "</h4>\n      <p class=\"video-item__channel-name\">").concat(decodeURI(video.channelTitle), "</p>\n      <p class=\"video-item__published-date\">").concat((0,_utils__WEBPACK_IMPORTED_MODULE_1__.formatDate)(video.publishedAt), "</p>\n      <div class=\"video-item__state\">\n        <button type=\"button\" class=\"video-item__state-button button\">\u2705</button>\n        <button type=\"button\" class=\"video-item__state-button button\">\uD83D\uDDD1\uFE0F</button>\n      <div>\n    </li>");
   }
