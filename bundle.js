@@ -640,8 +640,7 @@ var MyVideoItem = /*#__PURE__*/function (_CustomElement) {
   (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(MyVideoItem, [{
     key: "render",
     value: function render() {
-      this.innerHTML = this.template(_stores_SavedVideo__WEBPACK_IMPORTED_MODULE_8__["default"].instance.findVideo(this.dataset.videoId)); // SavedVideo.instance.subscribeWatchEvent(this);
-
+      this.innerHTML = this.template(_stores_SavedVideo__WEBPACK_IMPORTED_MODULE_8__["default"].instance.findVideo(this.dataset.videoId));
       _domains_State__WEBPACK_IMPORTED_MODULE_9__["default"].instance.subscribe(this);
     }
   }, {
@@ -657,31 +656,28 @@ var MyVideoItem = /*#__PURE__*/function (_CustomElement) {
       (0,_utils__WEBPACK_IMPORTED_MODULE_7__.addEvent)(this, 'click', '.video-item__state-button', function (e) {
         return _this.emitEvent(e);
       });
-    } // eslint-disable-next-line max-lines-per-function
-
+    }
   }, {
     key: "emitEvent",
     value: function emitEvent(e) {
+      var _this2 = this;
+
       var id = this.dataset.videoId;
+      var action = e.target.dataset.action;
 
-      switch (e.target.dataset.action) {
-        case 'watch':
-          (0,_utils__WEBPACK_IMPORTED_MODULE_7__.emit)('.video-item__state-button', '@watch', {
+      if (action === 'watch') {
+        (0,_utils__WEBPACK_IMPORTED_MODULE_7__.emit)('.video-item__state-button', '@watch', {
+          id: id
+        }, this);
+        return;
+      }
+
+      if (action === 'remove') {
+        (0,_utils__WEBPACK_IMPORTED_MODULE_7__.confirm)('해당 영상을 삭제하시겠습니까?', function () {
+          return (0,_utils__WEBPACK_IMPORTED_MODULE_7__.emit)('.video-item__state-button', '@remove', {
             id: id
-          }, this);
-          break;
-
-        case 'remove':
-          if (window.confirm('해당 영상을 삭제하시겠습니까?')) {
-            (0,_utils__WEBPACK_IMPORTED_MODULE_7__.emit)('.video-item__state-button', '@remove', {
-              id: id
-            }, this);
-          }
-
-          break;
-
-        default:
-          break;
+          }, _this2);
+        });
       }
     }
   }]);
@@ -1522,6 +1518,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "$": () => (/* binding */ $),
 /* harmony export */   "$$": () => (/* binding */ $$),
 /* harmony export */   "addEvent": () => (/* binding */ addEvent),
+/* harmony export */   "confirm": () => (/* binding */ confirm),
 /* harmony export */   "emit": () => (/* binding */ emit),
 /* harmony export */   "fetchData": () => (/* binding */ fetchData),
 /* harmony export */   "formatDate": () => (/* binding */ formatDate),
@@ -1626,6 +1623,11 @@ var formatDate = function formatDate(dateString) {
   var month = date.getMonth() + 1;
   var day = date.getDate();
   return "".concat(year, "\uB144 ").concat(month, "\uC6D4 ").concat(day, "\uC77C");
+};
+var confirm = function confirm(text, callback) {
+  if (window.confirm(text)) {
+    callback();
+  }
 };
 
 /***/ }),
