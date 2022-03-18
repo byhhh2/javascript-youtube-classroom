@@ -818,7 +818,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ "./node_modules/@babel/runtime/helpers/esm/wrapNativeSuper.js");
 /* harmony import */ var _domains_Save__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../domains/Save */ "./src/js/domains/Save.js");
-/* harmony import */ var _MyVideoItem__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./MyVideoItem */ "./src/js/elements/MyVideoItem.js");
+/* harmony import */ var _templates__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../templates */ "./src/js/templates.js");
+/* harmony import */ var _MyVideoItem__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./MyVideoItem */ "./src/js/elements/MyVideoItem.js");
 
 
 
@@ -829,6 +830,7 @@ __webpack_require__.r(__webpack_exports__);
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
 
 
 
@@ -849,13 +851,19 @@ var MyVideoList = /*#__PURE__*/function (_HTMLUListElement) {
     value: function connectedCallback() {
       this.render();
       _domains_Save__WEBPACK_IMPORTED_MODULE_6__["default"].instance.subscribe(this);
-    }
+    } // eslint-disable-next-line max-lines-per-function
+
   }, {
     key: "render",
     value: function render() {
       var _this = this;
 
       var videos = _domains_Save__WEBPACK_IMPORTED_MODULE_6__["default"].instance.getFilteredVideos(!this.id.includes('unwatched'));
+
+      if (!videos.length) {
+        this.innerHTML = _templates__WEBPACK_IMPORTED_MODULE_7__["default"].generateNoVideo(!this.id.includes('unwatched') ? '아직 시청한 영상이 없습니다.' : '아직 저장된 영상이 없습니다.');
+      }
+
       videos.forEach(function (video) {
         _this.insertAdjacentHTML('beforeend', "<my-video-item data-video-id=\"".concat(video.id, "\"></my-video-item>"));
       });
@@ -1399,7 +1407,10 @@ var TEMPLATE = {
   MY_RESULT: "\n    <ul is=\"my-video-list\" id=\"unwatched-video-list\"></ul>\n    <ul is=\"my-video-list\" id=\"watched-video-list\" class=\"hidden\"></ul>\n  ",
   // eslint-disable-next-line max-lines-per-function
   generateMyVideoItem: function generateMyVideoItem(video) {
-    return "\n    <li class=\"video-item\" data-video-id=\"".concat(video.id, "\">\n      <img\n        src=\"").concat(decodeURI(video.thumbnail), "\"\n        alt=\"video-item-thumbnail\" class=\"video-item__thumbnail\">\n      <h4 class=\"video-item__title\">").concat(decodeURI(video.title), "</h4>\n      <p class=\"video-item__channel-name\">").concat(decodeURI(video.channelTitle), "</p>\n      <p class=\"video-item__published-date\">").concat((0,_utils__WEBPACK_IMPORTED_MODULE_1__.formatDate)(video.publishedAt), "</p>\n      <div class=\"video-item__state\">\n        <button type=\"button\" class=\"video-item__state-button button").concat(video.isWatched ? ' video-item__state-button--watched' : '', "\" data-action=\"watch\">\u2705</button>\n        <button type=\"button\" class=\"video-item__state-button button\" data-action=\"remove\">\uD83D\uDDD1\uFE0F</button>\n      <div>\n    </li>");
+    return "\n      <li class=\"video-item\" data-video-id=\"".concat(video.id, "\">\n        <img\n          src=\"").concat(decodeURI(video.thumbnail), "\"\n          alt=\"video-item-thumbnail\" class=\"video-item__thumbnail\">\n        <h4 class=\"video-item__title\">").concat(decodeURI(video.title), "</h4>\n        <p class=\"video-item__channel-name\">").concat(decodeURI(video.channelTitle), "</p>\n        <p class=\"video-item__published-date\">").concat((0,_utils__WEBPACK_IMPORTED_MODULE_1__.formatDate)(video.publishedAt), "</p>\n        <div class=\"video-item__state\">\n          <button type=\"button\" class=\"video-item__state-button button").concat(video.isWatched ? ' video-item__state-button--watched' : '', "\" data-action=\"watch\">\u2705</button>\n          <button type=\"button\" class=\"video-item__state-button button\" data-action=\"remove\">\uD83D\uDDD1\uFE0F</button>\n        <div>\n      </li>\n    ");
+  },
+  generateNoVideo: function generateNoVideo(text) {
+    return "\n      <div class=\"no-result\" style=\"width: 100%;\">\n        <img src=".concat(_assets_images_not_found_png__WEBPACK_IMPORTED_MODULE_0__["default"], " alt=\"no result image\" class=\"no-result__image\">\n        <p class=\"no-result__description\">").concat(text, "</p>\n      </div>\n    ");
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TEMPLATE);
