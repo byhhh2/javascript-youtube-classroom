@@ -1257,6 +1257,8 @@ var VideoList = /*#__PURE__*/function (_HTMLUListElement) {
   }, {
     key: "insertLoading",
     value: function insertLoading(type) {
+      if ((0,_utils__WEBPACK_IMPORTED_MODULE_10__.$$)('.skeleton', this).length) return;
+
       if (type === 'search') {
         this.resetResult();
       }
