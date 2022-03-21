@@ -1309,7 +1309,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/classPrivateFieldGet */ "./node_modules/@babel/runtime/helpers/esm/classPrivateFieldGet.js");
 /* harmony import */ var _babel_runtime_helpers_classPrivateFieldSet__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/classPrivateFieldSet */ "./node_modules/@babel/runtime/helpers/esm/classPrivateFieldSet.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../constants */ "./src/js/constants.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils */ "./src/js/utils.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../constants */ "./src/js/constants.js");
 
 
 
@@ -1319,6 +1320,7 @@ __webpack_require__.r(__webpack_exports__);
 function _classPrivateFieldInitSpec(obj, privateMap, value) { _checkPrivateRedeclaration(obj, privateMap); privateMap.set(obj, value); }
 
 function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+
 
 
 
@@ -1351,7 +1353,7 @@ var SavedVideo = /*#__PURE__*/function () {
   }, {
     key: "dispatch",
     value: function dispatch(action, data, target) {
-      localStorage.setItem('videos', JSON.stringify(data));
+      localStorage.setItem('videos', JSON.stringify((0,_utils__WEBPACK_IMPORTED_MODULE_5__.deduplicate)(data)));
 
       (0,_babel_runtime_helpers_classPrivateFieldSet__WEBPACK_IMPORTED_MODULE_4__["default"])(this, _videos, this.loadVideos());
 
@@ -1388,7 +1390,7 @@ var SavedVideo = /*#__PURE__*/function () {
   }, {
     key: "isStorable",
     value: function isStorable() {
-      return (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_3__["default"])(this, _videos).length < _constants__WEBPACK_IMPORTED_MODULE_5__.VIDEO.MAX_SAVABLE_COUNT;
+      return (0,_babel_runtime_helpers_classPrivateFieldGet__WEBPACK_IMPORTED_MODULE_3__["default"])(this, _videos).length < _constants__WEBPACK_IMPORTED_MODULE_6__.VIDEO.MAX_SAVABLE_COUNT;
     }
   }], [{
     key: "instance",
@@ -1553,6 +1555,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "$$": () => (/* binding */ $$),
 /* harmony export */   "addEvent": () => (/* binding */ addEvent),
 /* harmony export */   "confirm": () => (/* binding */ confirm),
+/* harmony export */   "deduplicate": () => (/* binding */ deduplicate),
 /* harmony export */   "emit": () => (/* binding */ emit),
 /* harmony export */   "fetchData": () => (/* binding */ fetchData),
 /* harmony export */   "formatDate": () => (/* binding */ formatDate),
@@ -1662,6 +1665,13 @@ var confirm = function confirm(text, callback) {
   if (window.confirm(text)) {
     callback();
   }
+};
+var deduplicate = function deduplicate(array) {
+  return array.filter(function (element, index, array) {
+    return array.findIndex(function (target) {
+      return target.id === element.id;
+    }) === index;
+  });
 };
 
 /***/ }),
