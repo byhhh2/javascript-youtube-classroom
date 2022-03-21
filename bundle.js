@@ -409,9 +409,12 @@ var State = /*#__PURE__*/function () {
   }, {
     key: "updateVideoState",
     value: function updateVideoState(videoId) {
+      var savedVideos = _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.getVideos().filter(function (video) {
+        return video.id !== videoId;
+      });
       var currentVideo = _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.findVideo(videoId);
       currentVideo.isWatched = !currentVideo.isWatched;
-      _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.dispatch('watch', (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.getVideos()));
+      _stores_SavedVideo__WEBPACK_IMPORTED_MODULE_4__["default"].instance.dispatch('watch', [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(savedVideos), [currentVideo]));
     }
   }, {
     key: "removeVideo",
